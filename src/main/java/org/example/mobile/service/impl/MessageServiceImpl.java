@@ -2,9 +2,12 @@ package org.example.mobile.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.example.mobile.entity.Doctor;
 import org.example.mobile.entity.Message;
+import org.example.mobile.entity.User;
 import org.example.mobile.repository.MessageRepository;
 import org.example.mobile.service.MessageService;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -33,5 +36,15 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public List<Message> getConversation(Long user1Id, Long user2Id){
         return messageRepository.getConversationBetweenUsers(user1Id, user2Id);
+    }
+
+    @Override
+    public List<User> getAllUsersForDoctor(@Param("doctorId") Long doctorId) {
+        return messageRepository.getAllUsersForDoctor(doctorId);
+    }
+
+    @Override
+    public List<Doctor> getAllDoctorsForUser(@Param("userId") Long userId) {
+        return messageRepository.getAllDoctorsForUser(userId);
     }
 }
