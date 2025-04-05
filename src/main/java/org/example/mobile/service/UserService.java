@@ -1,5 +1,7 @@
 package org.example.mobile.service;
 
+import org.example.mobile.dto.request.UpdateAdditionalUserInfoRequest;
+import org.example.mobile.dto.request.UpdateUserInfoRequest;
 import org.example.mobile.entity.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
@@ -10,7 +12,9 @@ public interface UserService {
 
     void createUser(User user);
 
-    void updateUser(User user);
+    void updateUser(Long id, UpdateAdditionalUserInfoRequest request);
+
+    void updateUser(Long id, UpdateUserInfoRequest request);
 
     User getUserById(Long id);
 

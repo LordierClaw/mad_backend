@@ -1,11 +1,15 @@
 package org.example.mobile.service.impl;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.example.mobile.dto.request.UpdateAdditionalUserInfoRequest;
+import org.example.mobile.dto.request.UpdateUserInfoRequest;
 import org.example.mobile.entity.User;
 import org.example.mobile.exception.CommonException;
 import org.example.mobile.repository.UserRepository;
 import org.example.mobile.service.UserService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
@@ -31,7 +35,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateUser(User user) {
+    @Transactional
+    public void updateUser(Long id, UpdateAdditionalUserInfoRequest request) {
+        User user = getUserById(id);
+        BeanUtils.copyProperties(request, user);
+        userRepository.save(user);
+    }
+
+    @Override
+    @Transactional
+    public void updateUser(Long id, UpdateUserInfoRequest request) {
+        User user = getUserById(id);
+        BeanUtils.copyProperties(request, user);
         userRepository.save(user);
     }
 
