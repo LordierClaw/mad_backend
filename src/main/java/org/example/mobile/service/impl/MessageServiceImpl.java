@@ -16,6 +16,7 @@ import java.util.List;
 public class MessageServiceImpl implements MessageService {
     private final MessageRepository messageRepository;
 
+    @Override
     public Message sendMessage(Long senderId, Long receiverId, String content){
         Message message = new Message();
         message.setSenderId(senderId);
@@ -25,6 +26,11 @@ public class MessageServiceImpl implements MessageService {
         return messageRepository.save(message);
     }
 
+//    public Message receiveMessage(Long senderId, Long receiverId){
+//        return messageRepository.findById(receiverId).orElse(null);
+//    }
+
+    @Override
     public List<Message> getConversation(Long user1Id, Long user2Id){
         return messageRepository.getConversationBetweenUsers(user1Id, user2Id);
     }
