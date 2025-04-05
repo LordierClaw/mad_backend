@@ -1,5 +1,6 @@
 package org.example.mobile.service.impl;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.mobile.entity.Doctor;
@@ -20,6 +21,7 @@ public class MessageServiceImpl implements MessageService {
     private final MessageRepository messageRepository;
 
     @Override
+    @Transactional
     public Message sendMessage(Long senderId, Long receiverId, String content){
         Message message = new Message();
         message.setSenderId(senderId);
