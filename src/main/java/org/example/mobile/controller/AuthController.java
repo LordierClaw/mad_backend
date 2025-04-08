@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.mobile.common.Result;
+import org.example.mobile.dto.request.RefreshTokenRequest;
 import org.example.mobile.dto.request.ResetPasswordRequest;
 import org.example.mobile.dto.request.SignInRequest;
 import org.example.mobile.dto.request.SignUpRequest;
@@ -45,6 +46,12 @@ public class AuthController {
     public ResponseEntity<Result> resetPassword(@RequestBody @Valid ResetPasswordRequest request) {
         authenticationService.resetPassword(request);
         return ResponseEntity.ok(new Result("Đã thay đổi mật khẩu"));
+    }
+
+    @PostMapping("/refresh-token")
+    public ResponseEntity<Result> refreshToken(@RequestBody RefreshTokenRequest request) {
+        AuthResponse response = authenticationService.refreshToken(request.getRefreshToken());
+        return ResponseEntity.ok(new Result("Làm mới token thành công", response));
     }
 
 }

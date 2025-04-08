@@ -28,6 +28,8 @@ public class SecurityConfig {
     private final JWTAuthenticationFilter jwtAuthenticationFilter;
     private final UserService userService;
     private final UrlBasedCorsConfigurationSource urlBasedCorsConfigurationSource;
+    private final JWTAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+    private final JWTAccessDeniedHandler jwtAccessDeniedHandler;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -36,6 +38,10 @@ public class SecurityConfig {
                         .configurationSource(urlBasedCorsConfigurationSource)
                 )
                 .csrf(AbstractHttpConfigurer::disable)
+                .exceptionHandling(exceptionConfigurer -> exceptionConfigurer
+                        .authenticationEntryPoint(jwtAuthenticationEntryPoint)
+                        .accessDeniedHandler(jwtAccessDeniedHandler)
+                )
                 .authorizeHttpRequests((requests) -> requests
                         .requestMatchers("/api/v1/auth/**").permitAll()
                         .requestMatchers("/api/v1/**").authenticated()
