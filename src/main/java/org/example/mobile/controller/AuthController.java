@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class AuthController {
     private final AuthenticationService authenticationService;
-
     @PostMapping("/sign-up")
     public ResponseEntity<Result> signUp(@RequestBody @Valid SignUpRequest request) {
         authenticationService.signUp(request);
