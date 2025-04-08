@@ -112,6 +112,19 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         emailService.sendResetPasswordLink(user.getEmail(), otp);
     }
 
+    @Override
+    public AuthResponse refreshToken(String refreshToken) {
+        String userEmail = jwtService.extractUserName(refreshToken);
+        if (userEmail == null) {
+            throw new CommonException(HttpStatus.FORBIDDEN, "Refresh token không hợp lệ");
+        }
+        User user = userRepository.findByEmail(userEmail).orElseThrow();
+        return AuthResponse.builder()
+                .accessToken(jwtService.generateToken(new HashMap<>(), user.getEmail()))
+                .refreshToken(jwtService.generateRefreshToken(new HashMap<>(), user.getEmail()))
+                .build();
+    }
+
     private int generateOtp() {
         SecureRandom random = new SecureRandom();
         random.setSeed(PASSWORD_RESET_SECRET.getBytes(StandardCharsets.UTF_8));
