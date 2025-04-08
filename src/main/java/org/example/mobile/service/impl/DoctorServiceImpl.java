@@ -5,9 +5,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.mobile.dto.response.DoctorResponse;
 import org.example.mobile.entity.Doctor;
 import org.example.mobile.entity.DoctorInfo;
+import org.example.mobile.entity.User;
 import org.example.mobile.repository.DoctorInfoRepository;
 import org.example.mobile.repository.DoctorRepository;
+import org.example.mobile.repository.UserRepository;
 import org.example.mobile.service.DoctorService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,6 +21,7 @@ import java.util.List;
 public class DoctorServiceImpl implements DoctorService {
     private final DoctorRepository doctorRepository;
     private final DoctorInfoRepository doctorInfoRepository;
+    private final UserRepository userRepository;
 
     @Override
     public List<String> getAllSpecialties() {
@@ -27,12 +31,30 @@ public class DoctorServiceImpl implements DoctorService {
     @Override
     public List<DoctorResponse> getDoctorsBySpecialtyId(Long specialtyId) {
         List<Doctor> doctors = doctorRepository.findDoctorsBySpecialtyId(specialtyId);
+
+        List<Long> doctorIds = doctors.stream().map(Doctor::getId).toList();
+        List<User> users = userRepository.findAllById(doctorIds);
         
         List<DoctorInfo> doctorInfos = doctors.stream()
                 .map(doctor -> doctorInfoRepository.findByDoctorId(doctor.getId()))
                 .flatMap(List::stream)
                 .toList();
-        
-        return DoctorResponse.fromEntities(doctors, doctorInfos);
+        return doctors.stream().map(doctor -> {
+            DoctorResponse doctorResponse = new DoctorResponse();
+            BeanUtils.copyProperties(doctor, doctorResponse);
+            // Lấy thông tin đầu tiên và điền vào response
+            DoctorInfo info = doctorInfos.stream()
+                    .filter(di -> di.getDoctorId().equals(doctor.getId()))
+                    .findFirst()
+                    .orElse(new DoctorInfo());
+            BeanUtils.copyProperties(info, doctorResponse);
+            // Lấy thông tin user tương ứng
+            User user = users.stream()
+                    .filter(u -> u.getId().equals(doctor.getId()))
+                    .findFirst()
+                    .orElse(new User());
+            BeanUtils.copyProperties(user, doctorResponse);
+            return doctorResponse;
+        }).toList();
     }
 } 

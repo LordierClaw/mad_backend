@@ -37,38 +37,4 @@ public class DoctorResponse {
     private String title;
     private String description;
     private Integer orderNum;
-    
-    public static DoctorResponse fromEntity(Doctor doctor, DoctorInfo doctorInfo) {
-        User user = doctor.getUser();
-        
-        return DoctorResponse.builder()
-                .id(doctor.getId())
-                .specialty(doctor.getSpecialty())
-                .firstName(user != null ? user.getFirstName() : null)
-                .lastName(user != null ? user.getLastName() : null)
-                .email(user != null ? user.getEmail() : null)
-                .phoneNumber(user != null ? user.getPhoneNumber() : null)
-                .gender(user != null ? user.getGender() : null)
-                .dateOfBirth(user != null ? user.getDateOfBirth() : null)
-                .weight(user != null ? user.getWeight() : null)
-                .height(user != null ? user.getHeight() : null)
-                .role(user != null ? user.getRole().name() : null)
-                .title(doctorInfo != null ? doctorInfo.getTitle() : null)
-                .description(doctorInfo != null ? doctorInfo.getDescription() : null)
-                .orderNum(doctorInfo != null ? doctorInfo.getOrder() : null)
-                .build();
-    }
-    
-    public static List<DoctorResponse> fromEntities(List<Doctor> doctors, List<DoctorInfo> doctorInfos) {
-        return doctors.stream()
-                .map(doctor -> {
-                    DoctorInfo info = doctorInfos.stream()
-                            .filter(di -> di.getDoctorId().equals(doctor.getId()))
-                            .findFirst()
-                            .orElse(null);
-                    
-                    return fromEntity(doctor, info);
-                })
-                .collect(Collectors.toList());
-    }
 } 
