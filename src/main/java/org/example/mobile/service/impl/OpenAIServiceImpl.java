@@ -80,7 +80,7 @@ public class OpenAIServiceImpl implements OpenAIService {
             return response;
         } catch (Exception e) {
             log.error("Error calling OpenAI API to check drug interactions", e);
-            return "Không thể kiểm tra tương tác thuốc. Vui lòng liên hệ bác sĩ.";
+            return "Không thể kiểm tra tương tác thuốc.";
         }
     }
 } 
