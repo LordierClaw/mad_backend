@@ -1,13 +1,13 @@
 package org.example.mobile.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.example.mobile.dto.request.CreateMedicineRequest;
 import org.example.mobile.dto.request.UpdateMedicineRequest;
 import org.example.mobile.entity.Medicine;
 import org.example.mobile.exception.CommonException;
 import org.example.mobile.repository.MedicineRepository;
 import org.example.mobile.service.MedicineService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,23 +16,17 @@ import org.springframework.util.StringUtils;
 import java.util.List;
 
 @Service
-@Slf4j
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class MedicineServiceImpl implements MedicineService {
+
     private final MedicineRepository medicineRepository;
 
     @Override
     @Transactional
     public Medicine createMedicine(CreateMedicineRequest request) {
-        Medicine medicine = Medicine.builder()
-                .name(request.getName())
-                .imgUrl(request.getImgUrl())
-                .description(request.getDescription())
-                .use(request.getUse())
-                .usage(request.getUsage())
-                .precaution(request.getPrecaution())
-                .build();
-        
+        Medicine medicine = new Medicine();
+        BeanUtils.copyProperties(request, medicine);
         return medicineRepository.save(medicine);
     }
 
@@ -90,9 +84,20 @@ public class MedicineServiceImpl implements MedicineService {
         return medicineRepository.findById(id)
                 .orElseThrow(() -> new CommonException(HttpStatus.NOT_FOUND, "Không tìm thấy thuốc với ID: " + id));
     }
+    
+    @Override
+    public Medicine getMedicineByIdWithIngredients(Long id) {
+        return medicineRepository.findByIdWithIngredients(id)
+                .orElseThrow(() -> new CommonException(HttpStatus.NOT_FOUND, "Không tìm thấy thuốc với ID: " + id));
+    }
 
     @Override
     public List<Medicine> getAllMedicines() {
         return medicineRepository.findAll();
+    }
+    
+    @Override
+    public List<Medicine> getAllMedicinesWithIngredients() {
+        return medicineRepository.findAllWithIngredients();
     }
 } 

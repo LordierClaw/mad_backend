@@ -57,14 +57,14 @@ public class MedicineController {
     
     @GetMapping("/{id}")
     public ResponseEntity<Result> getMedicineById(@PathVariable Long id) {
-        Medicine medicine = medicineService.getMedicineById(id);
+        Medicine medicine = medicineService.getMedicineByIdWithIngredients(id);
         MedicineResponse response = MedicineResponse.fromEntity(medicine);
         return ResponseEntity.ok(new Result("Lấy thông tin thuốc thành công", response));
     }
     
     @GetMapping
     public ResponseEntity<Result> getAllMedicines() {
-        List<Medicine> medicines = medicineService.getAllMedicines();
+        List<Medicine> medicines = medicineService.getAllMedicinesWithIngredients();
         List<MedicineResponse> responses = MedicineResponse.fromEntities(medicines);
         return ResponseEntity.ok(new Result("Lấy danh sách thuốc thành công", responses));
     }
