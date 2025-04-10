@@ -12,6 +12,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.CascadeType;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -44,4 +49,8 @@ public class Medicine {
 
     @Column(name = "precaution", columnDefinition = "TEXT")
     private String precaution;
+    
+    @OneToMany(mappedBy = "medicine", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
+    private List<MedicineIngredient> ingredients = new ArrayList<>();
 }

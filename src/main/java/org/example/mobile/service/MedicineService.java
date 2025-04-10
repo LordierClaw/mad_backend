@@ -17,5 +17,9 @@ public interface MedicineService {
     
     Medicine getMedicineById(Long id);
     
+    Medicine getMedicineByIdWithIngredients(Long id);
+    
     List<Medicine> getAllMedicines();
+    
+    List<Medicine> getAllMedicinesWithIngredients();
 } 

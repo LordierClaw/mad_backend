@@ -42,13 +42,11 @@ public class DoctorServiceImpl implements DoctorService {
         return doctors.stream().map(doctor -> {
             DoctorResponse doctorResponse = new DoctorResponse();
             BeanUtils.copyProperties(doctor, doctorResponse);
-            // Lấy thông tin đầu tiên và điền vào response
             DoctorInfo info = doctorInfos.stream()
                     .filter(di -> di.getDoctorId().equals(doctor.getId()))
                     .findFirst()
                     .orElse(new DoctorInfo());
             BeanUtils.copyProperties(info, doctorResponse);
-            // Lấy thông tin user tương ứng
             User user = users.stream()
                     .filter(u -> u.getId().equals(doctor.getId()))
                     .findFirst()
