@@ -2,8 +2,11 @@ package org.example.mobile.controller;
 
 
 import lombok.RequiredArgsConstructor;
+import org.example.mobile.common.Result;
+import org.example.mobile.dto.response.TestResponse;
 import org.example.mobile.entity.User;
 import org.example.mobile.security.SecurityUtils;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,12 +31,17 @@ public class TestController {
     }
 
     @GetMapping("/test3")
-    public String test3() {
+    public ResponseEntity<Result> test3() {
         // Lấy thông tin user hiện tại
         Optional<User> user = SecurityUtils.getCurrentUserLogin();
         if (user.isPresent()) {
-            return "User hiện tại là: " + user.get().getId() + " " + user.get().getUsername();
+//            return "User hiện tại là: " + user.get().getId() + " " + user.get().getUsername();
+            TestResponse testResponse = TestResponse.builder()
+                    .id(user.get().getId())
+                    .username(user.get().getUsername())
+                    .build();
+            return ResponseEntity.ok(new Result("Lấy id user hiện tại thành công", testResponse));
         }
-        return "Cái này sẽ không xảy ra vì mặc định api này phải đc xác thực -> phải có thông tin user";
+        return ResponseEntity.ok(new Result(""));
     }
 }
